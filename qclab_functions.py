@@ -76,7 +76,7 @@ def lu_read(filename):
 		
 	return A, b.T
 
-	
+
 # **this function is incomplete**
 #					 ----------
 def lu_factor(A, pivot=False):
@@ -126,17 +126,48 @@ def lu_factor(A, pivot=False):
 	#	raise 'Matrix L is not square'
 	
 	# **copy-paste your errlab_functions.py code below**
-	pass
+	# get dimensions of square matrix 
+	n = np.shape(A)[0] 	
+	
+	# create initial row swap vector: p = [0, 1, 2, ... n]
+	p = np.arange(n) 		
+
+	# loop over each row in the matrix
+	for i in range(n):		
+		
+		# Step 2: Row swaps for partial pivoting
+		if pivot:
+			p[i] = i + np.argmax(abs(A[i:]),0)[i]
+			temp = A[i,:].copy()
+			A[i,:] = A[p[i],:].copy()
+			A[p[i],:] = temp
+			
+
+		# Step 0: Get the pіvot value
+		pivot_value = A[i,i]
+		
+		# Step 1: Perform the row reduction operations 
+		for j in range(i+1,n):
+			mult = A[j,i]/pivot_value
+			A[j,i:] -= mult*A[i,i:]
+			A[j,i] = mult
+		 
+	return A, p
 
 	
 # **this function is incomplete**
 #					 ----------
 def lu_forward_sub(L, b, p=None):
-	"""
-	**this needs to be completed***	
+	"""	
 	
+	Return the forward substitution of L and B in order to solve for y
+
     Parameters
-    ----------
+    L : np.array
+		Lower triangle matrix of L factors
+
+	b : np.array
+		vector of RHS for 
 			
     Returns
     -------
@@ -150,7 +181,24 @@ def lu_forward_sub(L, b, p=None):
 	"""	
 	
 	# **copy-paste your errlab_functions.py code below**
-	pass
+		# check shape of Ꮮ consistent with shape of b (for matrix multiplication Ꮮ^T*b)
+	assert np.shape(Ꮮ)[0] == len(b), 'incompatible dimensions of Ꮮ and b'
+	
+	# Step 0: Get matrix dimension										
+	n = np.shape(Ꮮ)[0]
+		
+	# Step 2: Perform partial pivoting row swaps on RHS
+	if p is not None:
+		for i in range(n):
+			temp = b[i].copy()
+			b[i] = b[p[i]].copy()
+			b[p[i]] = temp
+				
+	# Step 1: Perform forward substitution operations
+	for i in range(n-1):
+		b[i+1:] -= (Ꮮ[i+1:,i]*b[i]).reshape(n-1-i,1)
+		
+	return b
 
 	
 # **this function is incomplete**
@@ -162,7 +210,17 @@ def lu_backward_sub(U, y):
 	"""	
 		
 	# **copy-paste your errlab_functions.py code below**
-	pass												
+		# check shape consistency
+	n = np.shape(Ս)[0]
+	assert n == len(y), 'incompatible dimensions of Ս and y'
+	
+	# Perform backward substitution operations
+	for i in range(n-1,0,-1):
+		y[i] /= Ս[i,i]
+		y[:i] -= (Ս[:i,i]*y[i]).reshape(i,1)
+	y[0] /= Ս[0,0]
+
+	return y												
 
 	
 # **this function is incomplete**
@@ -194,5 +252,12 @@ def isSquare (A):
 	"""
 	# **this needs to be completed***	
 	# check that the condition of a square matrix is satisfied
+
+	(i, j) = np.shape(A)
+
+	if i == j:
+		B = True
+		return B
+
 	B = False
 	return B
