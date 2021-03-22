@@ -121,10 +121,13 @@ def lu_factor(A, pivot=False):
 	# **this needs to be completed***
 	# Precondition (check if a matrix is square)
 	# hint: you can use isSquare() function
-	#
+	k = isSquare(A)
+
 	# if *condition*
 	#	raise 'Matrix L is not square'
-	
+	if k == 0:
+		raise ValueError("Matrix L is not square")
+
 	# **copy-paste your errlab_functions.py code below**
 	# get dimensions of square matrix 
 	n = np.shape(A)[0] 	
@@ -184,6 +187,7 @@ def lu_forward_sub(L, b, p=None):
 		# check shape of Ꮮ consistent with shape of b (for matrix multiplication Ꮮ^T*b)
 	assert np.shape(Ꮮ)[0] == len(b), 'incompatible dimensions of Ꮮ and b'
 	
+
 	# Step 0: Get matrix dimension										
 	n = np.shape(Ꮮ)[0]
 		
@@ -201,7 +205,6 @@ def lu_forward_sub(L, b, p=None):
 	return b
 
 	
-# **this function is incomplete**
 #					 ----------
 def lu_backward_sub(U, y):
 	"""
