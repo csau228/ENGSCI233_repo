@@ -141,6 +141,7 @@ def test_isSquare():
 		[ 1,-1, 3,-1],
 		[-3, 2, 2, 2]])
 
+	# matrix is square and should pass
 	z = isSquare(LU)
 	z_soln = True
 	assert z == z_soln
@@ -151,6 +152,7 @@ def test_isSquare():
 		[-2, 1,-2, 1],
 		[ 1,-1, 3,-1]])
 
+	# matrix is not square
 	z = isSquare(LU2)
 	z_soln = False
 	assert z == z_soln
