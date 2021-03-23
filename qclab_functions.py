@@ -170,26 +170,36 @@ def lu_forward_sub(L, b, p=None):
 		Lower triangle matrix of L factors
 
 	b : np.array
-		vector of RHS for 
+		vector of RHS to be changed
 			
     Returns
-    -------
+    y : np.array
+	    vector of the forward substitution between L and b
 
     Notes
-    -----
+    Factorisation changes b in place, and therefore the y return is a modified b vector
 
     Examples
-    --------
+    >>>> L = np.array([
+	[ 1, 0, 0, 0],
+	[-2, 1, 0, 0],
+	[ 1,-1, 1, 0],
+	[-3, 2, 2, 1]])
+
+	>>>> b = np.array([4, -8, 9, 6])
+
+	>>>> lu_forward_sub(L, b, p=None)
+	np.array ([4, 0, 5, 8])
 
 	"""	
 	
 	# **copy-paste your errlab_functions.py code below**
 		# check shape of Ꮮ consistent with shape of b (for matrix multiplication Ꮮ^T*b)
-	assert np.shape(Ꮮ)[0] == len(b), 'incompatible dimensions of Ꮮ and b'
+	assert np.shape(L)[0] == len(b), 'incompatible dimensions of Ꮮ and b'
 	
 
 	# Step 0: Get matrix dimension										
-	n = np.shape(Ꮮ)[0]
+	n = np.shape(L)[0]
 		
 	# Step 2: Perform partial pivoting row swaps on RHS
 	if p is not None:
@@ -200,7 +210,7 @@ def lu_forward_sub(L, b, p=None):
 				
 	# Step 1: Perform forward substitution operations
 	for i in range(n-1):
-		b[i+1:] -= (Ꮮ[i+1:,i]*b[i]).reshape(n-1-i,1)
+		b[i+1:] -= (L[i+1:,i]*b[i]).reshape(n-1-i,1)
 		
 	return b
 
@@ -208,7 +218,36 @@ def lu_forward_sub(L, b, p=None):
 #					 ----------
 def lu_backward_sub(U, y):
 	"""
-	**this needs to be completed***	
+	
+	Return the backward substitution of U and y in order to get the final solution for
+	the system of equations
+
+    Parameters
+    U : np.array
+		Upper triangle matrix left from row reduction
+
+	y : np.array
+		vector of RHS to be changed
+			
+    Returns
+    y : np.array
+	    vector of the final system solutions
+
+    Notes
+    Factorisation changes y in place, and therefore the y return is a modified version
+	of the old y vector
+
+    Examples
+    >>>> U = np.array([
+	[ 1, 0, 0, 0],
+	[-2, 1, 0, 0],
+	[ 1,-1, 1, 0],
+	[-3, 2, 2, 1]])
+
+	>>>> y = np.array([4, 0, 5, 8])
+
+	>>>> lu_forward_sub(L, b, p=None)
+	np.array ([1, 2, 3, 4])
 
 	"""	
 		
@@ -256,11 +295,14 @@ def isSquare (A):
 	# **this needs to be completed***	
 	# check that the condition of a square matrix is satisfied
 
+	# find dimension of the array
 	(i, j) = np.shape(A)
 
+	# return true if dimensions are the same
 	if i == j:
 		B = True
 		return B
 
+	# return false if dimensions are not the same
 	B = False
 	return B
